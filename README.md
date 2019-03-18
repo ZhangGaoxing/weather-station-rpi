@@ -1,2 +1,2 @@
 # weather-station-rpi
- .NET IoT &amp; ASP.NET Core Project: Weather Station
+Raspberry Pi 3B+ & .NET IoT & ASP.NET Core Project: Weather Station
