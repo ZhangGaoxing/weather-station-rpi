@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Iot.Device.Bindings" Version="0.1.0-prerelease.19171.3" />
+    <PackageReference Include="System.Device.Gpio" Version="0.1.0-prerelease.19176.1" />
+  </ItemGroup>
+
 </Project>
