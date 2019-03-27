@@ -42,6 +42,7 @@ namespace WeatherStation.Device
                 pressure = pressureSensor.ReadPressureAsync().Result;
             }
 
+            // Get UV
             Lm8511 uvSensor = new Lm8511(adsSettings);
             double uv = uvSensor.UV;
 
