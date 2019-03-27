@@ -7,6 +7,7 @@ using System.Device.I2c.Drivers;
 using Iot.Device.Ads1115;
 using Iot.Device.Bmx280;
 using Iot.Device.Sht3x;
+using Iot.Device.Lm8511;
 
 namespace WeatherStation.Device
 {
@@ -18,9 +19,13 @@ namespace WeatherStation.Device
             I2cConnectionSettings sht3xSettings = new I2cConnectionSettings(1, (byte)Iot.Device.Sht3x.I2cAddress.AddrLow);
             UnixI2cDevice sht3x = new UnixI2cDevice(sht3xSettings);
 
-            // Digital Pressure Sensors BMP280
+            // Digital Pressure Sensors - BMP280
             I2cConnectionSettings bmpSettings = new I2cConnectionSettings(1, Bmp280.DefaultI2cAddress);
             UnixI2cDevice bmp280 = new UnixI2cDevice(bmpSettings);
+
+            // Analog to Digital Converter - ADS1115
+            I2cConnectionSettings adsSettings = new I2cConnectionSettings(1, (byte)Iot.Device.Ads1115.I2cAddress.GND);
+            UnixI2cDevice ads1115 = new UnixI2cDevice(adsSettings);
 
             // Get temperature and humidity
             double temperature = 0, humidity = 0;
@@ -37,12 +42,16 @@ namespace WeatherStation.Device
                 pressure = pressureSensor.ReadPressureAsync().Result;
             }
 
+            Lm8511 uvSensor = new Lm8511(adsSettings);
+            double uv = uvSensor.UV;
+
             Weather weather = new Weather
             {
                 DateTime = DateTime.Now,
                 Temperature = temperature,
                 Humidity = humidity,
-                Pressure = pressure
+                Pressure = pressure,
+                UV = uv
             };
 
             return weather;
