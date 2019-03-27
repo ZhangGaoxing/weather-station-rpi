@@ -9,4 +9,8 @@
     <PackageReference Include="System.Device.Gpio" Version="0.1.0-prerelease.19176.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WeatherStation.Model\WeatherStation.Model.csproj" />
+  </ItemGroup>
+
 </Project>
