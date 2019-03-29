@@ -80,3 +80,9 @@ td {
     display: inline-block;
     margin-left: 10px;
 }
+
+.weather-chart {
+    width: 700px;
+    height: 400px;
+    float: left
+}

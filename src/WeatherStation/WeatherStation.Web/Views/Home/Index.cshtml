@@ -2,6 +2,11 @@
     ViewData["Title"] = "Home Page";
 }
 
+@{ 
+    Weather latestData = (Weather)ViewData["LatestData"];
+    List<Weather> hoursData = (List<Weather>)ViewData["HoursData"];
+}
+
 <div class="text-center">
     <h1 class="display-4">Welcome to the Raspberry Pi Weather Station</h1>
     <p>Learn about <a href="https://github.com/dotnet/iot">building IoT apps with .NET IoT</a>.</p>
@@ -18,27 +23,27 @@
             <tbody>
                 <tr>
                     <td><b>Time</b></td>
-                    <td>1</td>
+                    <td>@latestData.DateTime.ToString("yyyy/MM/dd HH:mm")</td>
                 </tr>
                 <tr>
                     <td><b>Temperature</b></td>
-                    <td> ℃</td>
+                    <td>@latestData.Temperature ℃</td>
                 </tr>
                 <tr>
                     <td><b>Relative Humidity</b></td>
-                    <td> %</td>
+                    <td>@latestData.Humidity %</td>
                 </tr>
                 <tr>
                     <td><b>Pressure</b></td>
-                    <td> Pa</td>
+                    <td>@latestData.Pressure Pa</td>
                 </tr>
                 <tr>
                     <td><b>Respirable Particles</b></td>
-                    <td> mg/m³</td>
+                    <td>@latestData.Dust mg/m³</td>
                 </tr>
                 <tr>
                     <td><b>UV Index</b></td>
-                    <td> mW/cm²</td>
+                    <td>@latestData.UV mW/cm²</td>
                 </tr>
             </tbody>
         </table>
@@ -49,11 +54,182 @@
         <small class="weather-small">Show the first data per hour</small>
 
         <div>
-            <div id="temp" style="width: 700px;height:400px;float:left"></div>
-            <div id="humi" style="width: 700px;height:400px;float:left"></div>
-            <div id="press" style="width: 700px;height:400px;float:left"></div>
-            <div id="dust" style="width: 700px;height:400px;float:left"></div>
-            <div id="uv" style="width: 700px;height:400px;float:left"></div>
+            <div id="temp" class="weather-chart"></div>
+            <div id="humi" class="weather-chart"></div>
+            <div id="press" class="weather-chart"></div>
+            <div id="dust" class="weather-chart"></div>
+            <div id="uv" class="weather-chart"></div>
+            <div style="clear:both"></div>
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    var temp = echarts.init(document.getElementById('temp'));
+    var tempOpt = {
+        title: {
+            text: 'Temperature'
+        },
+        tooltip: {},
+        legend: {
+            data: ['Temperature']
+        },
+        xAxis: {
+            name: 'Time',
+            data: ["@hoursData[0].DateTime.ToString("MM/dd HH:mm")", "@hoursData[1].DateTime.ToString("MM/dd HH:mm")", "@hoursData[2].DateTime.ToString("MM/dd HH:mm")", "@hoursData[3].DateTime.ToString("MM/dd HH:mm")", "@hoursData[4].DateTime.ToString("MM/dd HH:mm")", "@hoursData[5].DateTime.ToString("MM/dd HH:mm")"]
+        },
+        yAxis: {
+            name: 'Temperature (℃)'
+        },
+        series: [{
+            name: 'Temperature (℃)',
+            type: 'line',
+            smooth: true,
+            itemStyle: {
+                normal: {
+                    color: '#c23531',
+                    lineStyle: {
+                        color: '#c23531'
+                    }
+                }
+            },
+            data: [@hoursData[0].Temperature, @hoursData[1].Temperature, @hoursData[2].Temperature, @hoursData[3].Temperature, @hoursData[4].Temperature, @hoursData[5].Temperature]
+        }]
+    };
+    temp.setOption(tempOpt);
+
+    var humi = echarts.init(document.getElementById('humi'));
+    var humiOpt = {
+        title: {
+            text: 'Relative Humidity'
+        },
+        tooltip: {},
+        legend: {
+            data: ['Relative Humidity']
+        },
+        xAxis: {
+            name: 'Time',
+            data: ["@hoursData[0].DateTime.ToString("MM/dd HH:mm")", "@hoursData[1].DateTime.ToString("MM/dd HH:mm")", "@hoursData[2].DateTime.ToString("MM/dd HH:mm")", "@hoursData[3].DateTime.ToString("MM/dd HH:mm")", "@hoursData[4].DateTime.ToString("MM/dd HH:mm")", "@hoursData[5].DateTime.ToString("MM/dd HH:mm")"]
+        },
+        yAxis: {
+            name: 'Relative Humidity (%)'
+        },
+        series: [{
+            name: 'Relative Humidity (%)',
+            type: 'line',
+            smooth: true,
+            itemStyle: {
+                normal: {
+                    color: '#2f4554',
+                    lineStyle: {
+                        color: '#2f4554'
+                    }
+                }
+            },
+            data: [@hoursData[0].Humidity, @hoursData[1].Humidity, @hoursData[2].Humidity, @hoursData[3].Humidity, @hoursData[4].Humidity, @hoursData[5].Humidity]
+        }]
+    };
+    humi.setOption(humiOpt);
+
+    var press = echarts.init(document.getElementById('press'));
+    var pressOpt = {
+        title: {
+            text: 'Pressure'
+        },
+        tooltip: {},
+        legend: {
+            data: ['Pressure']
+        },
+        xAxis: {
+            name: 'Time',
+            data: ["@hoursData[0].DateTime.ToString("MM/dd HH:mm")", "@hoursData[1].DateTime.ToString("MM/dd HH:mm")", "@hoursData[2].DateTime.ToString("MM/dd HH:mm")", "@hoursData[3].DateTime.ToString("MM/dd HH:mm")", "@hoursData[4].DateTime.ToString("MM/dd HH:mm")", "@hoursData[5].DateTime.ToString("MM/dd HH:mm")"]
+        },
+        yAxis: {
+            name: 'Pressure (Pa)',
+            min: function(value) {
+                return parseInt(value.min) - 100;
+            }
+        },
+        series: [{
+            name: 'Pressure (Pa)',
+            type: 'line',
+            smooth: true,
+            itemStyle: {
+                normal: {
+                    color: '#61a0a8',
+                    lineStyle: {
+                        color: '#61a0a8'
+                    }
+                }
+            },
+            data: [@hoursData[0].Pressure, @hoursData[1].Pressure, @hoursData[2].Pressure, @hoursData[3].Pressure, @hoursData[4].Pressure, @hoursData[5].Pressure]
+        }]
+    };
+    press.setOption(pressOpt);
+
+    var dust = echarts.init(document.getElementById('dust'));
+    var dustOpt = {
+        title: {
+            text: 'Respirable Particles'
+        },
+        tooltip: {},
+        legend: {
+            data: ['Respirable Particles']
+        },
+        xAxis: {
+            name: 'Time',
+            data: ["@hoursData[0].DateTime.ToString("MM/dd HH:mm")", "@hoursData[1].DateTime.ToString("MM/dd HH:mm")", "@hoursData[2].DateTime.ToString("MM/dd HH:mm")", "@hoursData[3].DateTime.ToString("MM/dd HH:mm")", "@hoursData[4].DateTime.ToString("MM/dd HH:mm")", "@hoursData[5].DateTime.ToString("MM/dd HH:mm")"]
+        },
+        yAxis: {
+            name: 'Respirable Particles (mg/m³)'
+        },
+        series: [{
+            name: 'Respirable Particles(mg/m³)',
+            type: 'line',
+            smooth: true,
+            itemStyle: {
+                normal: {
+                    color: '#d48265',
+                    lineStyle: {
+                        color: '#d48265'
+                    }
+                }
+            },
+            data: [@hoursData[0].Dust, @hoursData[1].Dust, @hoursData[2].Dust, @hoursData[3].Dust, @hoursData[4].Dust, @hoursData[5].Dust]
+        }]
+    };
+    dust.setOption(dustOpt);
+
+    var uv = echarts.init(document.getElementById('uv'));
+    var uvOpt = {
+        title: {
+            text: 'UV Index'
+        },
+        tooltip: {},
+        legend: {
+            data: ['UV Index']
+        },
+        xAxis: {
+            name: 'Time',
+            data: ["@hoursData[0].DateTime.ToString("MM/dd HH:mm")", "@hoursData[1].DateTime.ToString("MM/dd HH:mm")", "@hoursData[2].DateTime.ToString("MM/dd HH:mm")", "@hoursData[3].DateTime.ToString("MM/dd HH:mm")", "@hoursData[4].DateTime.ToString("MM/dd HH:mm")", "@hoursData[5].DateTime.ToString("MM/dd HH:mm")"]
+        },
+        yAxis: {
+            name: 'UV Index (mW/cm²)'
+        },
+        series: [{
+            name: 'UV Index (mW/cm²)',
+            type: 'line',
+            smooth: true,
+            itemStyle: {
+                normal: {
+                    color: '#91c7ae',
+                    lineStyle: {
+                        color: '#91c7ae'
+                    }
+                }
+            },
+            data: [@hoursData[0].UV, @hoursData[1].UV, @hoursData[2].UV, @hoursData[3].UV, @hoursData[4].UV, @hoursData[5].UV]
+        }]
+    };
+    uv.setOption(uvOpt);
+</script>

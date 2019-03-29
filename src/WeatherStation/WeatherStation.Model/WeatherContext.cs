@@ -12,7 +12,7 @@ namespace WeatherStation.Model
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=WeatherStation.db");
+            optionsBuilder.UseSqlite(@"Data Source=F:\WeatherStation.db");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
