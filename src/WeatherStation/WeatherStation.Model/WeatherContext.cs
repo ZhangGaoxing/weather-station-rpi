@@ -21,6 +21,5 @@ namespace WeatherStation.Model
 
             modelBuilder.Entity<Weather>().HasData(DatabaseInitializer.Seed());
         }
- 
     }
 }
