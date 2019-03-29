@@ -34,6 +34,5 @@ namespace WeatherStation.Web
         {
             _timer?.Dispose();
         }
-
     }
 }
