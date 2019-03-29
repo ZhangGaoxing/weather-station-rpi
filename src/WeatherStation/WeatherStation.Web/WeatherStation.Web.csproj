@@ -11,4 +11,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <ProjectReference Include="..\WeatherStation.Device\WeatherStation.Device.csproj" />
+    <ProjectReference Include="..\WeatherStation.Model\WeatherStation.Model.csproj" />
+  </ItemGroup>
+
 </Project>
