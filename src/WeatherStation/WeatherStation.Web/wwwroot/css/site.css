@@ -54,3 +54,29 @@ body {
   height: 60px;
   line-height: 60px; /* Vertically center the text there */
 }
+
+.weather-content > div{
+    margin-top: 20px
+}
+
+.weather-table {
+    border-collapse: collapse;
+}
+
+.weather-table, td {
+    border: 1px solid black;
+}
+
+td {
+    padding: 5px;
+}
+
+.weather-h1 {
+    display: inline-block;
+}
+
+.weather-small {
+    color: #888888;
+    display: inline-block;
+    margin-left: 10px;
+}

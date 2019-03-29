@@ -3,6 +3,57 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to the Raspberry Pi Weather Station</h1>
+    <p>Learn about <a href="https://github.com/dotnet/iot">building IoT apps with .NET IoT</a>.</p>
+</div>
+
+<script src="https://cdn.bootcss.com/echarts/4.1.0-release/echarts.min.js"></script>
+
+<div class="weather-content">
+    <div>
+        <h1 class="weather-h1">Latest Data</h1>
+        <small class="weather-small">Show the latest data in the database</small>
+
+        <table class="weather-table">
+            <tbody>
+                <tr>
+                    <td><b>Time</b></td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td><b>Temperature</b></td>
+                    <td> ℃</td>
+                </tr>
+                <tr>
+                    <td><b>Relative Humidity</b></td>
+                    <td> %</td>
+                </tr>
+                <tr>
+                    <td><b>Pressure</b></td>
+                    <td> Pa</td>
+                </tr>
+                <tr>
+                    <td><b>Respirable Particles</b></td>
+                    <td> mg/m³</td>
+                </tr>
+                <tr>
+                    <td><b>UV Index</b></td>
+                    <td> mW/cm²</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h1 class="weather-h1">6 Hour Data</h1>
+        <small class="weather-small">Show the first data per hour</small>
+
+        <div>
+            <div id="temp" style="width: 700px;height:400px;float:left"></div>
+            <div id="humi" style="width: 700px;height:400px;float:left"></div>
+            <div id="press" style="width: 700px;height:400px;float:left"></div>
+            <div id="dust" style="width: 700px;height:400px;float:left"></div>
+            <div id="uv" style="width: 700px;height:400px;float:left"></div>
+        </div>
+    </div>
 </div>
