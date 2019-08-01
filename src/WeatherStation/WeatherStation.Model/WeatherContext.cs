@@ -4,8 +4,6 @@ namespace WeatherStation.Model
 {
     public class WeatherContext : DbContext
     {
-        public DbSet<Weather> Weathers { get; set; }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Connection String

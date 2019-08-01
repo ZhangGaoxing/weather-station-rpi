@@ -3,6 +3,8 @@ using System.Device.I2c;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -16,7 +18,7 @@ namespace WeatherStation.ConsoleApp
 {
     class Program
     {
-        private const int Interval = 5000;
+        private const int Interval = 60000;
 
         static void Main(string[] args)
         {
@@ -33,9 +35,14 @@ namespace WeatherStation.ConsoleApp
 
         private static async void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            if (DateTime.Now.Minute % 10 != 0)
+                return;
+
             using WeatherContext context = new WeatherContext();
 
             Weather weather = await GetWeatherAsync();
+
+            PostWeiboAsync(weather);
 
             context.Add(weather);
             context.SaveChanges();
@@ -61,6 +68,7 @@ namespace WeatherStation.ConsoleApp
             return new Weather
             {
                 DateTime = DateTime.Now,
+                WeatherName = await WeatherHelper.GetXinzhiWeatherAsync(ConfigHelper.Get("Xinzhi:Key"), ConfigHelper.Get("Xinzhi:Location")),
                 Temperature = t,
                 Humidity = h,
                 Pressure = p,
@@ -70,9 +78,31 @@ namespace WeatherStation.ConsoleApp
 
         private static string GetImageBase64()
         {
-            TerminalHelper.Execute("fswebcam --save /home/pi/image.jpg -d /dev/video0 -r 640x480");
+            TerminalHelper.Execute($"fswebcam --save {ConfigHelper.Get("UsbCamPath")} -d /dev/video0 -r 640x480");
 
-            return FileHelper.FileToBase64("/home/pi/image.jpg");
+            return FileHelper.FileToBase64(ConfigHelper.Get("UsbCamPath"));
+        }
+
+        private async static void PostWeiboAsync(Weather weather)
+        {
+            string token = ConfigHelper.Get("Weibo:Token");  // weibo token
+            string status = $"{weather.DateTime.ToString("yyyy/MM/dd HH:mm")}    {weather.WeatherName}%0a" +
+                    $"温度：{Math.Round(weather.Temperature, 1)} ℃    体感温度：{Math.Round(WeatherHelper.CalHeatIndex(weather.Temperature, weather.Humidity), 1)} ℃%0a" +
+                    $"相对湿度：{Math.Round(weather.Humidity)} %25%0a" +
+                    $"气压：{Math.Round(weather.Pressure / 100, 2)} hPa%0a" +
+                    $"{ConfigHelper.Get("Weibo:StatusUrl")}";
+
+            using HttpClient client = new HttpClient();
+            using FileStream imageStream = File.OpenRead(ConfigHelper.Get("UsbCamPath"));
+
+            MultipartFormDataContent content = new MultipartFormDataContent
+                {
+                    { new StringContent(token, Encoding.UTF8), "access_token" },
+                    { new StringContent(status, Encoding.UTF8), "status" },
+                    { new StreamContent(imageStream, (int)imageStream.Length), "pic", "image.jpg" }
+                };
+
+            HttpResponseMessage response = await client.PostAsync("https://api.weibo.com/2/statuses/share.json", content);
         }
     }
 }
