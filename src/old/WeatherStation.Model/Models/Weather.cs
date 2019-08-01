@@ -11,25 +11,18 @@ namespace WeatherStation.Model
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column("weather_id")]
-        public long WeatherID { get; set; }
+        public int ID { get; set; }
 
-        [Column("date_time")]
         public DateTime DateTime { get; set; }
 
-        [Column("weather_name")]
-        public string WeatherName { get; set; }
-
-        [Column("temperature")]
         public double Temperature { get; set; }
 
-        [Column("humidity")]
         public double Humidity { get; set; }
 
-        [Column("pressure")]
         public double Pressure { get; set; }
 
-        [Column("image_base64")]
-        public string ImageBase64 { get; set; }
+        public double Dust { get; set; }
+
+        public double UV { get; set; }
     }
 }
