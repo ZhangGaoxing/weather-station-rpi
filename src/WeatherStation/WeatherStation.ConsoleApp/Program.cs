@@ -78,9 +78,10 @@ namespace WeatherStation.ConsoleApp
 
         private static string GetImageBase64()
         {
-            TerminalHelper.Execute($"fswebcam --save {ConfigHelper.Get("UsbCamPath")} -d /dev/video0 -r 640x480");
+            TerminalHelper.Execute($"sudo v4l2-ctl -d /dev/video0 -c exposure_absolute={ConfigHelper.Get("UsbCamera:Exposure")}");
+            TerminalHelper.Execute($"fswebcam --save {ConfigHelper.Get("UsbCamera:ImagePath")} -d /dev/video0 -r 640x480");
 
-            return FileHelper.FileToBase64(ConfigHelper.Get("UsbCamPath"));
+            return FileHelper.FileToBase64(ConfigHelper.Get("UsbCamera:ImagePath"));
         }
 
         private async static void PostWeiboAsync(Weather weather)
