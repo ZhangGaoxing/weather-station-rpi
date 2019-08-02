@@ -23,5 +23,5 @@
     <ProjectReference Include="..\WeatherStation.Helper\WeatherStation.Helper.csproj" />
     <ProjectReference Include="..\WeatherStation.Model\WeatherStation.Model.csproj" />
   </ItemGroup>
-  
+
 </Project>

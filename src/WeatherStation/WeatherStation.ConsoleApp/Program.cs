@@ -78,7 +78,6 @@ namespace WeatherStation.ConsoleApp
 
         private static string GetImageBase64()
         {
-            TerminalHelper.Execute($"sudo v4l2-ctl -d /dev/video0 -c exposure_absolute={ConfigHelper.Get("UsbCamera:Exposure")}");
             TerminalHelper.Execute($"fswebcam --save {ConfigHelper.Get("UsbCamera:ImagePath")} -d /dev/video0 -r 640x480");
 
             return FileHelper.FileToBase64(ConfigHelper.Get("UsbCamera:ImagePath"));
@@ -94,7 +93,7 @@ namespace WeatherStation.ConsoleApp
                     $"{ConfigHelper.Get("Weibo:StatusUrl")}";
 
             using HttpClient client = new HttpClient();
-            using FileStream imageStream = File.OpenRead(ConfigHelper.Get("UsbCamPath"));
+            using FileStream imageStream = File.OpenRead(ConfigHelper.Get("UsbCamera:ImagePath"));
 
             MultipartFormDataContent content = new MultipartFormDataContent
                 {
