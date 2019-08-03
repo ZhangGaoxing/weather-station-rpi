@@ -38,14 +38,21 @@ namespace WeatherStation.ConsoleApp
             if (DateTime.Now.Minute % 10 != 0)
                 return;
 
-            using WeatherContext context = new WeatherContext();
+            try
+            {
+                using WeatherContext context = new WeatherContext();
 
-            Weather weather = await GetWeatherAsync();
+                Weather weather = await GetWeatherAsync();
 
-            PostWeiboAsync(weather);
+                PostWeiboAsync(weather);
 
-            context.Add(weather);
-            context.SaveChanges();
+                context.Add(weather);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }    
         }
 
         private static async Task<Weather> GetWeatherAsync()
@@ -54,10 +61,10 @@ namespace WeatherStation.ConsoleApp
             I2cDevice device = I2cDevice.Create(settings);
             using Bme280 bme = new Bme280(device);
 
-            bme.SetPowerMode(Bmx280PowerMode.Normal);
-            bme.SetTemperatureSampling(Sampling.UltraLowPower);
-            bme.SetPressureSampling(Sampling.UltraLowPower);
-            bme.SetHumiditySampling(Sampling.UltraLowPower);
+            bme.SetPowerMode(Bmx280PowerMode.Forced);
+            bme.SetTemperatureSampling(Sampling.UltraHighResolution);
+            bme.SetPressureSampling(Sampling.UltraHighResolution);
+            bme.SetHumiditySampling(Sampling.UltraHighResolution);
 
             double t = Math.Round((await bme.ReadTemperatureAsync()).Celsius, 2);
             double h = Math.Round(await bme.ReadHumidityAsync(), 2);
