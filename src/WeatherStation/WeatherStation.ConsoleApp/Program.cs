@@ -61,10 +61,10 @@ namespace WeatherStation.ConsoleApp
             I2cDevice device = I2cDevice.Create(settings);
             using Bme280 bme = new Bme280(device);
 
-            bme.SetPowerMode(Bmx280PowerMode.Forced);
-            bme.SetTemperatureSampling(Sampling.UltraHighResolution);
-            bme.SetPressureSampling(Sampling.UltraHighResolution);
-            bme.SetHumiditySampling(Sampling.UltraHighResolution);
+            bme.SetPowerMode(Bmx280PowerMode.Normal);
+            bme.SetTemperatureSampling(Sampling.HighResolution);
+            bme.SetHumiditySampling(Sampling.HighResolution);
+            bme.SetPressureSampling(Sampling.HighResolution);
 
             double t = Math.Round((await bme.ReadTemperatureAsync()).Celsius, 2);
             double h = Math.Round(await bme.ReadHumidityAsync(), 2);

@@ -11,11 +11,11 @@ namespace WeatherStation.Helper
         {
             string base64 = "";
 
-            using (FileStream filestream = new FileStream(path, FileMode.Open))
+            using (FileStream fs = new FileStream(path, FileMode.Open))
             {
-                byte[] buffer = new byte[filestream.Length];
+                byte[] buffer = new byte[fs.Length];
 
-                filestream.Read(buffer, 0, buffer.Length);
+                fs.Read(buffer, 0, buffer.Length);
                 base64 = Convert.ToBase64String(buffer);
             }
 
