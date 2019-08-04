@@ -35,7 +35,7 @@ namespace WeatherStation.ConsoleApp
 
         private static async void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            int interval = Convert.ToInt32(ConfigHelper.Get("Interval:Date"));
+            int interval = Convert.ToInt32(ConfigHelper.Get("Interval:Data"));
             if (DateTime.Now.Minute % interval != 0)
                 return;
 
