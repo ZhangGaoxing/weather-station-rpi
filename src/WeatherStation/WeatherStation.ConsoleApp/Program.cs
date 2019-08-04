@@ -18,24 +18,25 @@ namespace WeatherStation.ConsoleApp
 {
     class Program
     {
-        private const int Interval = 60000;
-
         static void Main(string[] args)
         {
+            int interval = Convert.ToInt32(ConfigHelper.Get("Interval:Timer"));
+
             Timer timer = new Timer();
-            timer.Interval = Interval;
+            timer.Interval = interval;
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
             
             while (true)
             {
-                Thread.Sleep(Interval);
+                Thread.Sleep(interval);
             }
         }
 
         private static async void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (DateTime.Now.Minute % 10 != 0)
+            int interval = Convert.ToInt32(ConfigHelper.Get("Interval:Date"));
+            if (DateTime.Now.Minute % interval != 0)
                 return;
 
             try
@@ -62,9 +63,9 @@ namespace WeatherStation.ConsoleApp
             using Bme280 bme = new Bme280(device);
 
             bme.SetPowerMode(Bmx280PowerMode.Normal);
-            bme.SetTemperatureSampling(Sampling.HighResolution);
-            bme.SetHumiditySampling(Sampling.HighResolution);
-            bme.SetPressureSampling(Sampling.HighResolution);
+            bme.SetTemperatureSampling(Sampling.UltraHighResolution);
+            bme.SetHumiditySampling(Sampling.UltraHighResolution);
+            bme.SetPressureSampling(Sampling.UltraHighResolution);
 
             double t = Math.Round((await bme.ReadTemperatureAsync()).Celsius, 2);
             double h = Math.Round(await bme.ReadHumidityAsync(), 2);
