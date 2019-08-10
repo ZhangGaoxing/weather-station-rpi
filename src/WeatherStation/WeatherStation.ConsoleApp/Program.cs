@@ -41,14 +41,13 @@ namespace WeatherStation.ConsoleApp
 
             try
             {
-                using WeatherContext context = new WeatherContext();
-
                 Weather weather = await GetWeatherAsync();
 
-                PostWeiboAsync(weather);
-
+                using WeatherContext context = new WeatherContext();
                 context.Add(weather);
                 context.SaveChanges();
+
+                PostWeiboAsync(weather);
             }
             catch (Exception ex)
             {
