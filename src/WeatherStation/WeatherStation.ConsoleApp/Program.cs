@@ -103,11 +103,11 @@ namespace WeatherStation.ConsoleApp
             using FileStream imageStream = File.OpenRead(ConfigHelper.Get("UsbCamera:ImagePath"));
 
             MultipartFormDataContent content = new MultipartFormDataContent
-                {
-                    { new StringContent(token, Encoding.UTF8), "access_token" },
-                    { new StringContent(status, Encoding.UTF8), "status" },
-                    { new StreamContent(imageStream, (int)imageStream.Length), "pic", "image.jpg" }
-                };
+            {
+                { new StringContent(token, Encoding.UTF8), "access_token" },
+                { new StringContent(status, Encoding.UTF8), "status" },
+                { new StreamContent(imageStream, (int)imageStream.Length), "pic", "image.jpg" }
+            };
 
             HttpResponseMessage response = await client.PostAsync("https://api.weibo.com/2/statuses/share.json", content);
         }

@@ -17,12 +17,19 @@ namespace WeatherStation.Helper
         /// <returns>Weather name</returns>
         public static async Task<string> GetXinzhiWeatherAsync(string key, string location)
         {
-            using HttpClient client = new HttpClient();
+            try
+            {
+                using HttpClient client = new HttpClient();
 
-            var response = await client.GetAsync($"https://api.seniverse.com/v3/weather/now.json?key={key}&location={location}&language=zh-Hans&unit=c");
-            string json = await response.Content.ReadAsStringAsync();
+                var response = await client.GetAsync($"https://api.seniverse.com/v3/weather/now.json?key={key}&location={location}&language=zh-Hans&unit=c");
+                string json = await response.Content.ReadAsStringAsync();
 
-            return (string)JsonConvert.DeserializeObject<dynamic>(json).results[0].now.text;
+                return (string)JsonConvert.DeserializeObject<dynamic>(json).results[0].now.text;
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
         }
 
         /// <summary>
