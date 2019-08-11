@@ -47,7 +47,7 @@ namespace WeatherStation.ConsoleApp
                 context.Add(weather);
                 context.SaveChanges();
 
-                PostWeiboAsync(weather);
+                await PostWeiboAsync(weather);
             }
             catch (Exception ex)
             {
@@ -63,12 +63,14 @@ namespace WeatherStation.ConsoleApp
 
             bme.SetPowerMode(Bmx280PowerMode.Normal);
             bme.SetTemperatureSampling(Sampling.UltraHighResolution);
-            bme.SetHumiditySampling(Sampling.UltraHighResolution);
             bme.SetPressureSampling(Sampling.UltraHighResolution);
+            bme.SetHumiditySampling(Sampling.UltraHighResolution);
 
             double t = Math.Round((await bme.ReadTemperatureAsync()).Celsius, 2);
             double h = Math.Round(await bme.ReadHumidityAsync(), 2);
             double p = Math.Round(await bme.ReadPressureAsync(), 2);
+
+            bme.SetPowerMode(Bmx280PowerMode.Sleep);
 
             Console.WriteLine($"Temperature:{t} Humidity:{h} Pressure:{p}");
 
@@ -90,7 +92,7 @@ namespace WeatherStation.ConsoleApp
             return FileHelper.FileToBase64(ConfigHelper.Get("UsbCamera:ImagePath"));
         }
 
-        private async static void PostWeiboAsync(Weather weather)
+        private async static Task PostWeiboAsync(Weather weather)
         {
             string token = ConfigHelper.Get("Weibo:Token");  // weibo token
             string status = $"{weather.DateTime.ToString("yyyy/MM/dd HH:mm")}    {weather.WeatherName}%0a" +
