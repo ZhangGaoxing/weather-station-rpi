@@ -47,7 +47,8 @@ namespace WeatherStation.ConsoleApp
                 context.Add(weather);
                 context.SaveChanges();
 
-                await PostWeiboAsync(weather);
+                if (DateTime.Now.Minute % interval == 0)
+                    await PostWeiboAsync(weather);
             }
             catch (Exception ex)
             {
@@ -87,7 +88,7 @@ namespace WeatherStation.ConsoleApp
 
         private static string GetImageBase64()
         {
-            TerminalHelper.Execute($"fswebcam --save {ConfigHelper.Get("UsbCamera:ImagePath")} -d /dev/video0 -r 640x480");
+            TerminalHelper.Execute($"fswebcam --save {ConfigHelper.Get("UsbCamera:ImagePath")} -d /dev/video0 -S 1 -r 640x480");
 
             return FileHelper.FileToBase64(ConfigHelper.Get("UsbCamera:ImagePath"));
         }
