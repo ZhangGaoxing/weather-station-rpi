@@ -47,7 +47,7 @@ namespace WeatherStation.ConsoleApp
                 context.Add(weather);
                 context.SaveChanges();
 
-                if (DateTime.Now.Minute % interval == 0)
+                if (DateTime.Now.Minute == 0 || DateTime.Now.Minute == 30)
                     await PostWeiboAsync(weather);
             }
             catch (Exception ex)
