@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Device.I2c;
-using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -60,6 +58,7 @@ namespace WeatherStation.ConsoleApp
         {
             I2cConnectionSettings settings = new I2cConnectionSettings(0, Bme280.SecondaryI2cAddress);
             I2cDevice device = I2cDevice.Create(settings);
+
             using Bme280 bme = new Bme280(device);
 
             bme.SetPowerMode(Bmx280PowerMode.Normal);
@@ -73,7 +72,7 @@ namespace WeatherStation.ConsoleApp
 
             bme.SetPowerMode(Bmx280PowerMode.Sleep);
 
-            Console.WriteLine($"Temperature:{t} Humidity:{h} Pressure:{p}");
+            //Console.WriteLine($"Temperature:{t} Humidity:{h} Pressure:{p}");
 
             return new Weather
             {
