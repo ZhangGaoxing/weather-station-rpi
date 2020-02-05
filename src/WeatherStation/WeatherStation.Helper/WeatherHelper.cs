@@ -40,22 +40,35 @@ namespace WeatherStation.Helper
         /// <returns>Temperature in celsius</returns>
         public static double CalHeatIndex(double temp, double rh)
         {
-            double t = temp * 1.8 + 32;
-            double hi;
+            double tf = temp * 1.8 + 32;
+            double tf2 = Math.Pow(tf, 2);
+            double rh2 = Math.Pow(rh, 2);
 
-            hi = -42.379 + 2.04901523 * t + 10.14333127 * rh - .22475541 * t * rh
-             - .00683783 * t * t - .05481717 * rh * rh + .00122874 * t * t * rh
-             + .00085282 * t * rh * rh - .00000199 * t * t * rh * rh;
+            double steadman = 0.5 * (tf + 61 + ((tf - 68) * 1.2) + (rh * 0.094));
 
-            if (hi < 80)
-                hi = 0.5 * t + 61.0 + (t - 68.0) * 1.2 + rh * 0.094;
-            else
-                if (rh < 13 && (t > 80 || t < 112))
-                hi -= (13 - rh) / 4.0 * Math.Sqrt((17 - Math.Abs(t - 95)) / 17.0);
-            else if (rh > 85 && (t > 80 || t < 87))
-                hi += (rh - 85) * (87 - t) / 50.0;
+            if (steadman + tf < 160) 
+                return (steadman - 32) / 1.8;
 
-            return (hi - 32) / 1.8;
+            double rothfuszRegression = (-42.379)
+                + (2.04901523 * tf)
+                + (10.14333127 * rh)
+                - (0.22475541 * tf * rh)
+                - (6.83783 * 0.001 * tf2)
+                - (5.481717 * 0.01 * rh2)
+                + (1.22874 * 0.001 * tf2 * rh)
+                + (8.5282 * 0.0001 * tf * rh2)
+                - (1.99 * 0.000001 * tf2 * rh2);
+
+            if (rh < 13 && tf >= 80 && tf <= 112)
+            {
+                rothfuszRegression += ((13 - rh) / 4) * Math.Sqrt((17 - Math.Abs(tf - 95)) / 17);
+            }
+            else if (rh > 85 && tf >= 80 && tf <= 87)
+            {
+                rothfuszRegression += ((rh - 85) / 10) * ((87 - tf) / 5);
+            }
+
+            return (rothfuszRegression - 32) / 1.8;
         }
     }
 }

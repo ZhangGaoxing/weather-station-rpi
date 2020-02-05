@@ -1,4 +1,4 @@
-CREATE DATABASE WeatherStation
+CREATE DATABASE "WeatherStation"
     WITH 
     OWNER = postgres
     ENCODING = 'UTF8';
