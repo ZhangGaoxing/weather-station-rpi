@@ -87,7 +87,7 @@ namespace WeatherStation.ConsoleApp
 
         private static string GetImageBase64()
         {
-            TerminalHelper.Execute($"fswebcam --save {ConfigHelper.Get("UsbCamera:ImagePath")} -d /dev/video0 -S 1 -r 640x480");
+            TerminalHelper.Execute($"fswebcam --save {ConfigHelper.Get("UsbCamera:ImagePath")} -d {ConfigHelper.Get("UsbCamera:Driver")} -S 1 -r 640x480");
 
             return FileHelper.FileToBase64(ConfigHelper.Get("UsbCamera:ImagePath"));
         }
